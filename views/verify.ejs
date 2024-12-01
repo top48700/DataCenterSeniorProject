@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <title>Verify Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('/pic/campus.jpg');
+      /* Replace with your background image path */
+      background-size: cover;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: linear-gradient(135deg, #ffb3c1, #ffccd5, #ffe0e5);
+      padding: 40px 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      padding-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      color: #333;
+    }
+
+    .content {
+      color: #333;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .code {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+      font-size: 24px;
+      letter-spacing: 2px;
+      color: #fff;
+      background-color: #007bff;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    .verify-button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #9b59b6;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .resend {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .resend a {
+      color: #9b59b6;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Verify Your Account</h1>
+    </div>
+    <div class="content">
+      <% if (typeof status !=='undefined' && status) { %>
+        <div class="alert alert-<%= status === 'success' ? 'success' : 'danger' %> alert-dismissible fade show"
+          role="alert">
+          <%= status %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% } %>
+        <p>An email with the verification code has been sent to <span id="email-display">
+          <%= user ? user.email : 'unknown email' %>
+      </span>.</p>
+      <form id="verifyForm" action="/verify" method="post">
+          <input type="hidden" id="userEmail" name="value" value="<%= user ? user.email : '' %>">
+            <input type="hidden" name="method" value="email"> <!-- Add hidden input for method -->
+            <div>
+              <input class="form-control" type="text" name="code" placeholder="Verification Code" required>
+            </div>
+            <br>
+            <div>
+              <button type="submit" class="btn btn-outline-success">Verify</button>
+            </div>
+          </form>
+          <br>
+          <button type="button" class="btn btn-outline-secondary" id="resendButton" onclick="resendOTP()"
+            disabled>Resend
+            OTP</button>
+          <p id="countdown"></p>
+    </div>
+    <div class="footer">
+      <p>If you did not receive the email, please check your spam folder or click the button to resend the code.</p>
+    </div>
+  </div>
+
+  <script>
+    let countdown = 5;
+    const resendButton = document.getElementById('resendButton');
+    const countdownElement = document.getElementById('countdown');
+    const userEmail = "<%= user.email %>";
+    if (userEmail) {
+      document.getElementById('userEmail').value = userEmail;
+      document.getElementById('email-display').textContent = userEmail;
+    } else {
+      console.error('Email is required.');
+    }
+    let interval;
+
+    function startCountdown() {
+      clearInterval(interval);
+      resendButton.disabled = true;
+      countdown = 5;
+      interval = setInterval(() => {
+        countdown--;
+        countdownElement.textContent = `You can resend the code in ${countdown} seconds.`;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          resendButton.disabled = false;
+          countdownElement.textContent = '';
+        }
+      }, 1000);
+    }
+
+    function resendOTP() {
+      fetch('/resend-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          method:'email',
+          value: userEmail
+        })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to resend OTP. Please try again.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'OTP Resent',
+              text: 'OTP has been resent to your email.',
+            });
+            startCountdown();
+          } else {
+            throw new Error(data.message || 'Failed to resend OTP. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message,
+          });
+        });
+    }
+    window.onload = startCountdown;
+  </script>
+</body>
+
+</html>

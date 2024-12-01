@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Dashboard - MFU</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f2f5;
+    }
+    .sidebar {
+      height: 100vh;
+      background: linear-gradient(180deg, #4e54c8 0%, #8f94fb 100%);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      padding-top: 20px;
+    }
+    .sidebar .nav-link {
+      color: rgba(255,255,255,0.8);
+      border-radius: 5px;
+      margin: 5px 15px;
+      transition: all 0.3s;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      color: #fff;
+      background-color: rgba(255,255,255,0.1);
+      transform: translateX(5px);
+    }
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    }
+    .profile-header {
+      background-image: url('/pic/campus.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 200px;
+      border-radius: 15px 15px 0 0;
+      position: relative;
+    }
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(rgba(78, 84, 200, 0.7), rgba(143, 148, 251, 0.7));
+      border-radius: 15px 15px 0 0;
+    }
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    .btn-custom {
+      background: linear-gradient(45deg, #4e54c8, #8f94fb);
+      border: none;
+      color: white;
+      transition: all 0.3s;
+    }
+    .btn-custom:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+    }
+    .form-check-input:checked {
+      background-color: #4e54c8;
+      border-color: #4e54c8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+        <div class="position-sticky">
+          <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none" href="/dashboard">
+            <img src="/pic/logo.png" alt="MFU logo" width="40" height="40" class="me-2">
+            <span class="fs-4">MFU</span>
+          </a>
+          <hr>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="/dashboard">
+                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/ocr">
+                <i class="fas fa-id-card me-2"></i> Verify ID Card
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/form">
+                <i class="fas fa-user me-2"></i> Profile
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+          <h1 class="h2">Welcome, <%= username %>!</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="/logout" class="btn btn-custom">
+              <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </a>
+          </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="card mb-4">
+          <div class="profile-header"></div>
+          <div class="card-body text-center pt-5 mt-5">
+            <h4><%= username %></h4>
+            <p class="text-muted"><i class="fas fa-envelope me-2"></i><%= email %></p>
+            <button class="btn btn-custom mt-3">Edit Profile</button>
+          </div>
+        </div>
+
+        <!-- Settings Cards -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Platform Settings</h5>
+              </div>
+              <div class="card-body">
+                <h6 class="text-uppercase text-muted mb-3">Account</h6>
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Email notifications</label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1">
+                  <label class="form-check-label" for="flexSwitchCheckDefault1">Push notifications</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" checked>
+                  <label class="form-check-label" for="flexSwitchCheckDefault2">Monthly reports</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card mb-4">
+              <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Account Information</h5>
+              </div>
+              <div class="card-body">
+                <p><strong>Full Name:</strong> <%= username %></p>
+                <p><strong>Mobile:</strong> </p>
+                <p><strong>Email:</strong> <%= email %></p>
+                <p><strong>Social:</strong></p>
+                <div>
+                  <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-facebook"></i> Facebook</a>
+                  <a href="#" class="btn btn-outline-info btn-sm me-2"><i class="fab fa-twitter"></i> Twitter</a>
+                  <a href="#" class="btn btn-outline-danger btn-sm"><i class="fab fa-instagram"></i> Instagram</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- SweetAlert2 for notifications -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Your custom scripts -->
+  <script>
+    const socket = io();
+    const userId = 'USER_ID'; // Replace with actual user ID
+
+    // Register session with the server
+    socket.emit('registerSession', userId);
+
+    // Handle forced logout
+    socket.on('forcedLogout', (message) => {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Forced Logout',
+        text: 'There is a login with this account from another location: ' + message,
+        showConfirmButton: false,
+        timer: 5000
+      }).then(() => {
+        window.location.href = '/logout';
+      });
+    });
+  </script>
+</body>
+
+</html>

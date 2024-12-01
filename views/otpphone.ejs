@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/pic/campus.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+
+        .container h1 {
+            color: #ff4081;
+        }
+
+        .container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .container button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            background-color: #ff4081;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #e73570;
+        }
+
+        .container p {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>OTP Verification</h1>
+        <p>Phone Number: <span id="phoneNumberDisplay">
+                <%= user.phoneNumber %>
+            </span></p>
+        <input type="hidden" id="phoneNumber" value="<%= user.phoneNumber %>">
+
+        <% if (!user.phoneNumber) { %>
+            <p>No phone number found. Please contact support.</p>
+            <% } else { %>
+                <button id="requestOTP">Request OTP</button>
+
+                <div id="otpSection" style="display: none;">
+                    <input type="text" id="otpCode" placeholder="Enter OTP">
+                    <button id="verifyOTP">Verify OTP</button>
+                    <button id="resendOTP">Resend OTP</button>
+                </div>
+                <% } %>
+
+                    <p id="message"></p>
+    </div>
+
+    <script>
+        // Get the elements
+        const requestOTPButton = document.getElementById('requestOTP');
+        const otpSection = document.getElementById('otpSection');
+        const otpCodeInput = document.getElementById('otpCode');
+        const verifyOTPButton = document.getElementById('verifyOTP');
+        const resendOTPButton = document.getElementById('resendOTP');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+
+        // Request OTP
+        requestOTPButton.addEventListener('click', async () => {
+            const phoneNumber = phoneNumberInput.value.trim();
+
+            if (phoneNumber === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Phone number is required!',
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/request-otp-phone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ method: 'phone', value: phoneNumber }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    otpSection.style.display = 'block';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Requested',
+                        text: 'An OTP has been sent to your phone number.',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message,
+                    });
+                }
+            } catch (error) {
+                console.error('Error requesting OTP:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while requesting OTP.',
+                });
+            }
+        });
+
+        // Verify OTP
+        verifyOTPButton.addEventListener('click', async () => {
+            const phoneNumber = phoneNumberInput.value.trim();
+            const otpCode = otpCodeInput.value.trim();
+
+            if (otpCode === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'OTP code is required!',
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ method: 'phone', value: phoneNumber, code: otpCode }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Verification Successful',
+                        text: result.message,
+                    }).then(() => {
+                        window.location.href = result.redirect;
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message || 'Unknown error occurred',
+                    });
+                }
+            } catch (error) {
+                console.error('Detailed error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: `An error occurred while verifying OTP: ${error.message}`,
+                });
+            }
+        });
+
+        // Resend OTP
+        resendOTPButton.addEventListener('click', async () => {
+            const phoneNumber = phoneNumberInput.value.trim();
+
+            if (phoneNumber === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Phone number is required!',
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ method: 'phone', value: phoneNumber }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Resent',
+                        text: 'A new OTP has been sent to your phone number.',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message,
+                    });
+                }
+            } catch (error) {
+                console.error('Error resending OTP:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while resending OTP.',
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

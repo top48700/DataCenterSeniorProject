@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #4e54c8 0%, #8f94fb 100%);
+            color: white;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            margin: 5px 15px;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #4e54c8;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4e54c8;
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .info-row label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .info-row .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .info-row .input-group i {
+            padding: 10px;
+            background: #4e54c8;
+            color: white;
+            min-width: 40px;
+            text-align: center;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .info-row input[type="text"],
+        .info-row input[type="email"],
+        .info-row input[type="password"],
+        .info-row input[type="tel"],
+        .info-row input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .info-row input[type="text"]:focus,
+        .info-row input[type="email"]:focus,
+        .info-row input[type="password"]:focus,
+        .info-row input[type="tel"]:focus,
+        .info-row input[type="number"]:focus {
+            border-color: #4e54c8;
+            box-shadow: 0 0 5px rgba(78, 84, 200, 0.5);
+            background-color: #fff;
+        }
+
+        .info-row input[type="text"]::placeholder,
+        .info-row input[type="email"]::placeholder,
+        .info-row input[type="password"]::placeholder,
+        .info-row input[type="tel"]::placeholder,
+        .info-row input[type="number"]::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        button {
+            background-color: #4e54c8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3d44b8;
+        }
+
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+
+        select {
+            width: 100px;
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+            color: #333;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        select:focus {
+            border-color: #4e54c8;
+            box-shadow: 0 0 5px rgba(78, 84, 200, 0.5);
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="position-sticky">
+            <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+                href="/dashboard">
+                <img src="/pic/logo.png" alt="MFU logo" width="40" height="40" class="me-2">
+                <span class="fs-4">MFU</span>
+            </a>
+            <hr>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link " href="/dashboard">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/ocr">
+                        <i class="fas fa-id-card me-2"></i> Verify ID Card
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/form">
+                        <i class="fas fa-user me-2"></i> Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <form action="/submit-form" method="POST">
+            <div class="container">
+                <h2>Personal Information</h2>
+                <div class="info-row">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="personal[0][first_name]" required>
+                </div>
+                <div class="info-row">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="personal[0][last_name]" required>
+                </div>
+                <div class="info-row">
+                    <label for="profile_image">Profile Image URL:</label>
+                    <input type="file" id="profile_image" name="personal[0][profile_image]">
+                </div>
+                <div class="info-row">
+                    <label for="telephone_number">Telephone Number:</label>
+                    <input type="text" id="telephone_number" name="personal[0][telephone_number]">
+                </div>
+                <div class="info-row">
+                    <label for="mfu_mail">MFU Mail:</label>
+                    <input type="email" id="mfu_mail" name="personal[0][mfu_mail]">
+                </div>
+                <div class="info-row">
+                    <label for="personal_email">Personal Email:</label>
+                    <input type="email" id="personal_email" name="personal[0][personal_email]">
+                </div>
+                <div class="info-row">
+                    <label for="dob_day">Date of Birth:</label>
+                    <div class="input-group">
+                        <select id="dob_day" name="personal[0][dateOfbirth][0][day]" style="width: 100px;">
+                            <option value="">Day</option>
+                        </select>
+                        <select id="dob_month" name="personal[0][dateOfbirth][0][month]" style="width: 100px;">
+                            <option value="">Month</option>
+
+                        </select>
+                        <select id="dob_year" name="personal[0][dateOfbirth][0][year]" style="width: 100px;">
+                            <option value="">Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <label for="first_name_english">First Name (English):</label>
+                    <input type="text" id="first_name_english" name="personal[0][first_name_english]">
+                </div>
+                <div class="info-row">
+                    <label for="last_name_english">Last Name (English):</label>
+                    <input type="text" id="last_name_english" name="personal[0][last_name_english]">
+                </div>
+                <div class="info-row">
+                    <label for="ethnicity">Ethnicity:</label>
+                    <input type="text" id="ethnicity" name="personal[0][ethnicity]">
+                </div>
+                <div class="info-row">
+                    <label for="nationality">Nationality:</label>
+                    <input type="text" id="nationality" name="personal[0][nationality]">
+                </div>
+                <div class="info-row">
+                    <label for="id_card_passport">ID Card/Passport:</label>
+                    <input type="text" id="id_card_passport" name="personal[0][id_card_passport]">
+                </div>
+                <div class="info-row">
+                    <label for="religion">Religion:</label>
+                    <input type="text" id="religion" name="personal[0][religion]">
+                </div>
+                <div class="info-row">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="personal[0][address_personal][0][address]">
+                </div>
+                <div class="info-row">
+                    <label for="province">Province:</label>
+                    <input type="text" id="province" name="personal[0][address_personal][0][province]">
+                </div>
+                <div class="info-row">
+                    <label for="district">District:</label>
+                    <input type="text" id="district" name="personal[0][address_personal][0][district]">
+                </div>
+                <div class="info-row">
+                    <label for="subDistrict">Sub-District:</label>
+                    <input type="text" id="subDistrict" name="personal[0][address_personal][0][subDistrict]">
+                </div>
+                <div class="info-row">
+                    <label for="postcode">Postcode:</label>
+                    <input type="text" id="postcode" name="personal[0][address_personal][0][postcode]">
+                </div>
+            </div>
+
+            <div class="container">
+                <h2>Education</h2>
+                <div class="info-row">
+                    <label for="education_level">Education Level:</label>
+                    <input type="text" id="education_level" name="education[0][education_level]" required>
+                </div>
+                <div class="info-row">
+                    <label for="major">Major:</label>
+                    <input type="text" id="major" name="education[0][major]" required>
+                </div>
+                <div class="info-row">
+                    <label for="faculty">Faculty:</label>
+                    <input type="text" id="faculty" name="education[0][faculty]" required>
+                </div>
+                <div class="info-row">
+                    <label for="year">Year:</label>
+                    <input type="number" id="year" name="education[0][year]" required>
+                </div>
+            </div>
+
+            <div class="container">
+                <h2>Father's Information</h2>
+                <div class="info-row">
+                    <label for="father_first_name">First Name:</label>
+                    <input type="text" id="father_first_name" name="father[0][father_first_name]">
+                </div>
+                <div class="info-row">
+                    <label for="father_last_name">Last Name:</label>
+                    <input type="text" id="father_last_name" name="father[0][father_last_name]">
+                </div>
+                <div class="info-row">
+                    <label for="father_dob_day">Date of Birth:</label>
+                    <div class="input-group">
+                        <select id="father_dob_day" name="father[0][father_birthdate][0][day]" style="width: 100px;">
+                            <option value="">Day</option>
+                        </select>
+                        <select id="father_dob_month" name="father[0][father_birthdate][0][month]"
+                            style="width: 100px;">
+                            <option value="">Month</option>
+                        </select>
+                        <select id="father_dob_year" name="father[0][father_birthdate][0][year]" style="width: 100px;">
+                            <option value="">Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <label for="father_telephone_number">Telephone Number:</label>
+                    <input type="text" id="father_telephone_number" name="father[0][father_telephone_number]">
+                </div>
+                <div class="info-row">
+                    <label for="father_occupation">Occupation:</label>
+                    <input type="text" id="father_occupation" name="father[0][father_occupation]">
+                </div>
+                <div class="info-row">
+                    <label for="father_email">Email:</label>
+                    <input type="email" id="father_email" name="father[0][father_email]">
+                </div>
+                <div class="info-row">
+                    <label for="father_relationship">Relationship:</label>
+                    <input type="text" id="father_relationship" name="father[0][father_relationship]">
+                </div>
+                <div class="info-row">
+                    <label for="father_address">Address:</label>
+                    <input type="text" id="father_address" name="father[0][father_address][0][address]">
+                </div>
+                <div class="info-row">
+                    <label for="father_province">Province:</label>
+                    <input type="text" id="father_province" name="father[0][father_address][0][province]">
+                </div>
+                <div class="info-row">
+                    <label for="father_district">District:</label>
+                    <input type="text" id="father_district" name="father[0][father_address][0][district]">
+                </div>
+                <div class="info-row">
+                    <label for="father_subDistrict">Sub-District:</label>
+                    <input type="text" id="father_subDistrict" name="father[0][father_address][0][subDistrict]">
+                </div>
+                <div class="info-row">
+                    <label for="father_postcode">Postcode:</label>
+                    <input type="text" id="father_postcode" name="father[0][father_address][0][postcode]">
+                </div>
+            </div>
+
+            <div class="container">
+                <h2>Mother's Information</h2>
+                <div class="info-row">
+                    <label for="mother_first_name">First Name:</label>
+                    <input type="text" id="mother_first_name" name="mother[0][mother_first_name]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_last_name">Last Name:</label>
+                    <input type="text" id="mother_last_name" name="mother[0][mother_last_name]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_dob_day">Date of Birth:</label>
+                    <div class="input-group">
+                        <select id="mother_dob_day" name="mother[0][mother_birthdate][0][day]" style="width: 100px;">
+                            <option value="">Day</option>
+                        </select>
+                        <select id="mother_dob_month" name="mother[0][mother_birthdate][0][month]"
+                            style="width: 100px;">
+                            <option value="">Month</option>
+                        </select>
+                        <select id="mother_dob_year" name="mother[0][mother_birthdate][0][year]" style="width: 100px;">
+                            <option value="">Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <label for="mother_telephone_number">Telephone Number:</label>
+                    <input type="text" id="mother_telephone_number" name="mother[0][mother_telephone_number]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_occupation">Occupation:</label>
+                    <input type="text" id="mother_occupation" name="mother[0][mother_occupation]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_email">Email:</label>
+                    <input type="email" id="mother_email" name="mother[0][mother_email]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_relationship">Relationship:</label>
+                    <input type="text" id="mother_relationship" name="mother[0][mother_relationship]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_address">Address:</label>
+                    <input type="text" id="mother_address" name="mother[0][mother_address][0][address]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_province">Province:</label>
+                    <input type="text" id="mother_province" name="mother[0][mother_address][0][province]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_district">District:</label>
+                    <input type="text" id="mother_district" name="mother[0][mother_address][0][district]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_subDistrict">Sub-District:</label>
+                    <input type="text" id="mother_subDistrict" name="mother[0][mother_address][0][subDistrict]">
+                </div>
+                <div class="info-row">
+                    <label for="mother_postcode">Postcode:</label>
+                    <input type="text" id="mother_postcode" name="mother[0][mother_address][0][postcode]">
+                </div>
+            </div>
+
+            <div class="container">
+                <h2>Emergency Contact</h2>
+                <div class="info-row">
+                    <label for="emergency_contact_name">Name:</label>
+                    <input type="text" id="emergency_contact_name" name="emergency_contact[0][emergency_contact_name]">
+                </div>
+                <div class="info-row">
+                    <label for="emergency_contact_relationship">Relationship:</label>
+                    <input type="text" id="emergency_contact_relationship"
+                        name="emergency_contact[0][emergency_contact_relationship]">
+                </div>
+                <div class="info-row">
+                    <label for="emergency_contact_telephone_number">Telephone Number:</label>
+                    <input type="text" id="emergency_contact_telephone_number"
+                        name="emergency_contact[0][emergency_contact_telephone_number]">
+                </div>
+            </div>
+
+            <div class="container">
+                <button type="submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        // Populate day options for all date selectors
+        const populateDays = (selectElement) => {
+            for (let i = 1; i <= 31; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                selectElement.appendChild(option);
+            }
+        };
+
+        // Populate month options for all date selectors
+        const populateMonths = (selectElement) => {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = String(index + 1).padStart(2, '0');
+                option.textContent = month;
+                selectElement.appendChild(option);
+            });
+        };
+
+        // Populate year options for all date selectors
+        const populateYears = (selectElement) => {
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1900; i--) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                selectElement.appendChild(option);
+            }
+        };
+
+        // Populate all date select elements
+        populateDays(document.getElementById('dob_day'));
+        populateDays(document.getElementById('father_dob_day'));
+        populateDays(document.getElementById('mother_dob_day'));
+
+        populateMonths(document.getElementById('dob_month'));
+        populateMonths(document.getElementById('father_dob_month'));
+        populateMonths(document.getElementById('mother_dob_month'));
+
+        populateYears(document.getElementById('dob_year'));
+        populateYears(document.getElementById('father_dob_year'));
+        populateYears(document.getElementById('mother_dob_year'));
+
+    </script>
+</body>
+
+</html>

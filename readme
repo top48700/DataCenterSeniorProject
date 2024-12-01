@@ -1,0 +1,9 @@
+install package
+npm install express mongoose body-parser nodemailer ejs @vonage/server-sdk
+
+-------------------
+run code use node server.js
+-------------------
+database click link form mongo on pc
+mongodb://localhost:27017/login-register-db
+-------------------
